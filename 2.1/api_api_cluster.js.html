@@ -351,7 +351,7 @@ ClusterApi.prototype.getComponentTemplate = function clusterGetComponentTemplate
  * @memberOf API-Cluster
  *
  * @param {Object} params
- * @param {boolean} [params.flat_settings] Whether to return settings in the flat form, which can improve readability, especially for heavily nested settings.
+ * ç
  * @param {boolean} [params.include_defaults] Whether to include default settings as part of the response. This parameter is useful for identifying the names and current values of settings you want to update.
  * @param {string} [params.cluster_manager_timeout=30s] - The amount of time to wait for a connection to the cluster manager node.
  *
@@ -381,6 +381,30 @@ ClusterApi.prototype.getSettings = function clusterGetSettingsApi(params, option
   return this.transport.request(request, options, callback);
 };
 
+/**
+ * The most basic cluster health request returns a simple status of the health of your cluster. OpenSearch expresses cluster health in three colors: green, yellow, and red. A green status means all primary shards and their replicas are allocated to nodes. A yellow status means all primary shards are allocated to nodes, but some replicas aren’t. A red status means at least one primary shard is not allocated to any node.
+ * &lt;br/> See Also: {@link https://opensearch.org/docs/latest/api-reference/cluster-health/ OpenSearch - Cluster Health}
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params
+ * @param {} [params.index] - To get the status of a specific index, provide the index name.
+ * @param {string} [params.expand_wildcards=open] - Expands wildcard expressions to concrete indices. Combine multiple values with commas. Supported values are 'all', 'open', 'closed', 'hidden', and 'none'.
+ * @param {string} [params.level=cluster] - The level of detail for returned health information. Supported values are 'cluster', 'indices', and 'shards'.
+ * @param {boolean} [params.local=false] - Whether to return information from the local node only instead of from the cluster manager node.
+ * @param {string} [params.cluster_manager_timeout=30s] - The amount of time to wait for a connection to the cluster manager node.
+ * @param {string} [params.timeout=30s] - The amount of time to wait for a response from the cluster.
+ * @param {string} [params.wait_for_active_shards=0] - Wait until the specified number of shards is active before returning a response. 'all' for all shards
+ * @param {string} [params.wait_for_nodes] - Wait for N number of nodes. Use 12 for exact match, >12 and &lt;12 for range.
+ * @param {string} [params.wait_for_events] - Wait until all currently queued events with the given priority are processed. Supported values are 'immediate', 'urgent', 'high', 'normal', 'low', and 'languid'.
+ * @param {boolean} [params.wait_for_no_relocating_shards=false] - Whether to wait until there are no relocating shards in the cluster.
+ * @param {boolean} [params.wait_for_no_initializing_shards=false] - Whether to wait until there are no initializing shards in the cluster.
+ * @param {string} [params.wait_for_status] - Wait until the cluster health reaches the specified status or better. Supported values are 'green', 'yellow', and 'red'.
+ *
+ * @param {Object} options - Options for {@link Transport#request}
+ * @param {function} callback - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/latest/api-reference/cluster-health/#response Cluster Health Response}
+ */
 ClusterApi.prototype.health = function clusterHealthApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
@@ -407,6 +431,19 @@ ClusterApi.prototype.health = function clusterHealthApi(params, options, callbac
   return this.transport.request(request, options, callback);
 };
 
+/**
+ * Get a list of any cluster-level changes
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params
+ * @param {boolean} [params.local=false] - Whether to return information from the local node only instead of from the cluster manager node.
+ * @param {string} [params.cluster_manager_timeout=30s] - The amount of time to wait for a connection to the cluster manager node.
+ *
+ * @param {Object} options - Options for {@link Transport#request}
+ * @param {function} callback - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
+ */
 ClusterApi.prototype.pendingTasks = function clusterPendingTasksApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
@@ -428,6 +465,19 @@ ClusterApi.prototype.pendingTasks = function clusterPendingTasksApi(params, opti
   return this.transport.request(request, options, callback);
 };
 
+/**
+ * Updates the cluster voting config exclusions by node ids or node names.
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params
+ * @param {string} [params.node_names] - A comma-separated list of the persistent ids of the nodes to exclude from the voting configuration. If specified, you may not also specify node_names.
+ * @param {string} [params.node_ids] - A comma-separated list of the names of the nodes to exclude from the voting configuration. If specified, you may not also specify node_ids.
+ *
+ * @param {Object} options - Options for {@link Transport#request}
+ * @param {function} callback - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
+ */
 ClusterApi.prototype.postVotingConfigExclusions = function clusterPostVotingConfigExclusionsApi(
   params,
   options,
@@ -453,6 +503,22 @@ ClusterApi.prototype.postVotingConfigExclusions = function clusterPostVotingConf
   return this.transport.request(request, options, callback);
 };
 
+/**
+ * Creates or updates a component template
+ *
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params
+ * @param {string} params.name - The name of the component template.
+ * @param {object} params.body - The template definition.
+ * @param {string} [params.cluster_manager_timeout=30s] - The amount of time to wait for a connection to the cluster manager node.
+ * @param {boolean} [params.create=false] - Whether the index template should only be added if new or can also replace an existing one.
+ *
+ * @param {Object} options - Options for {@link Transport#request}
+ * @param {function} callback - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
+ */
 ClusterApi.prototype.putComponentTemplate = function clusterPutComponentTemplateApi(
   params,
   options,
@@ -497,7 +563,7 @@ ClusterApi.prototype.putComponentTemplate = function clusterPutComponentTemplate
  * @param {boolean} [params.flat_settings] Whether to return settings in the flat form, which can improve readability, especially for heavily nested settings.
  * @param {string} [params.cluster_manager_timeout=30s] - The amount of time to wait for a connection to the cluster manager node.
  * @param {string} [params.timeout=30s] - The amount of time to wait for a response from the cluster.
- * @param {object} params.body - The settings to be updated. Can be either `transient` or `persistent` (survives cluster restart).
+ * @param {object} params.body - The settings to be updated. Can be either 'transient' or 'persistent' (survives cluster restart).
  *
  * @param {Object} options - Options for {@link Transport#request}
  * @param {function} callback - Callback that handles errors and response
@@ -531,6 +597,17 @@ ClusterApi.prototype.putSettings = function clusterPutSettingsApi(params, option
   return this.transport.request(request, options, callback);
 };
 
+/**
+ * This operation provides connection information for any remote OpenSearch clusters that you’ve configured for the local cluster, such as the remote cluster alias, connection mode (sniff or proxy), IP addresses for seed nodes, and timeout settings.
+ * &lt;br/> See Also: {@link https://opensearch.org/docs/latest/api-reference/remote-info/ OpenSearch - Remote cluster information}
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params - (Unused)
+ * @param {Object} options - Options for {@link Transport#request}
+ * @param {function} callback - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/latest/api-reference/remote-info/#response Remote cluster information }
+ */
 ClusterApi.prototype.remoteInfo = function clusterRemoteInfoApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
@@ -552,6 +629,23 @@ ClusterApi.prototype.remoteInfo = function clusterRemoteInfoApi(params, options,
   return this.transport.request(request, options, callback);
 };
 
+/**
+ * Allows to manually change the allocation of individual shards in the cluster.
+ *
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params
+ * @param {object} [params.body] - The definition of 'commands' to perform ('move', 'cancel', 'allocate')
+ * @param {boolean} [params.dry_run] - Simulate the operation only and return the resulting state
+ * @param {boolean} [params.explain] - Return an explanation of why the commands can or cannot be executed
+ * @param {boolean} [params.retry_failed] - Retries allocation of shards that are blocked due to too many subsequent allocation failures
+ * @param {string | string[]} [params.metric] - Limit the information returned to the specified metrics. Defaults to all but metadata (options: _all, blocks, metadata, nodes, routing_table, cluster_manager_node, version)
+ *
+ * @param {Object} options - Options for {@link Transport#request}
+ * @param {function} callback - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
+ */
 ClusterApi.prototype.reroute = function clusterRerouteApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
@@ -573,6 +667,28 @@ ClusterApi.prototype.reroute = function clusterRerouteApi(params, options, callb
   return this.transport.request(request, options, callback);
 };
 
+/**
+ * Get comprehensive information about the state of the cluster.
+ *
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params
+ * @param {string | string[]} [params.metric] - Limit the information returned to the specified metrics. Defaults to all but metadata (options: _all, blocks, metadata, nodes, routing_table, cluster_manager_node, version).
+ * @param {string | string[]} [params.index] - List of index names; use '_all' or empty string to perform the operation on all indices.
+ * @param {boolean} [params.local=false] - Whether to return information from the local node only instead of from the cluster manager node.
+ * @param {string} [params.cluster_manager_timeout=30s] - The amount of time to wait for a connection to the cluster manager node.
+ * @param {boolean} [params.flat_settings=false] - Whether to return settings in the flat form, which can improve readability, especially for heavily nested settings.
+ * @param {number} [params.wait_for_metadata_version] - Wait for the metadata version to be equal or greater than the specified metadata version.
+ * @param {string} [params.wait_for_timeout=30s] - The maximum time to wait for wait_for_metadata_version before timing out
+ * @param {boolean} [params.ignore_unavailable] - Whether specified concrete indices should be ignored when unavailable (missing or closed)
+ * @param {boolean} [params.allow_no_indices] - Whether to ignore if a wildcard indices expression resolves into no concrete indices. (This includes `_all` string or when no indices have been specified)
+ * @param {string} [params.expand_wildcards=open] - Expands wildcard expressions to concrete indices. Combine multiple values with commas. Supported values are 'all', 'open', 'closed', 'hidden', and 'none'. Default is 'open'.
+ *
+ * @param {Object} options - Options for {@link Transport#request}
+ * @param {function} callback - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
+ */
 ClusterApi.prototype.state = function clusterStateApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
@@ -615,6 +731,22 @@ ClusterApi.prototype.state = function clusterStateApi(params, options, callback)
 
   return this.transport.request(request, options, callback);
 };
+
+/**
+ * The CAT aliases operation lists the mapping of aliases to indices, plus routing and filtering information.
+ * &lt;br/> See Also: {@link https://opensearch.org/docs/latest/api-reference/cluster-stats/ OpenSearch - Cluster stats}
+ *
+ * @memberOf API-Cluster
+ *
+ * @param {Object} params
+ * @param {string | string[]} [params.node_id] - A comma-separated list of node IDs or names to limit the returned information; use '_local' to return information from the node you're connecting to, leave empty to get information from all nodes.
+ *
+ *
+ * @param {Object} [options] - Options for {@link Transport#request}
+ * @param {function} [callback] - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/latest/api-reference/cluster-stats/#response Cluster stats Response}
+ */
 
 ClusterApi.prototype.stats = function clusterStatsApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
@@ -725,7 +857,7 @@ module.exports = ClusterApi;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Dec 05 2022 19:59:14 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Mon Dec 05 2022 21:35:48 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
