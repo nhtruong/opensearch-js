@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: lib/pool/CloudConnectionPool.js</title>
+    <title>JSDoc: Source: api/api/clear_scroll.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: lib/pool/CloudConnectionPool.js</h1>
+    <h1 class="page-title">Source: api/api/clear_scroll.js</h1>
 
     
 
@@ -57,49 +57,56 @@
 
 'use strict';
 
-const BaseConnectionPool = require('./BaseConnectionPool');
+/* eslint camelcase: 0 */
+/* eslint no-unused-vars: 0 */
 
-class CloudConnectionPool extends BaseConnectionPool {
-  constructor(opts) {
-    super(opts);
-    this.cloudConnection = null;
+/** @namespace API-Scroll */
+
+const { handleError, snakeCaseKeys, normalizeArguments, kConfigurationError } = require('../utils');
+const acceptedQuerystring = ['pretty', 'human', 'error_trace', 'source', 'filter_path'];
+const snakeCase = { errorTrace: 'error_trace', filterPath: 'filter_path' };
+
+/**
+ * Close the search context when you’re done scrolling, because the scroll operation continues to consume computing resources until the timeout.
+ * &lt;br/> See Also: {@link https://opensearch.org/docs/latest/api-reference/scroll/ OpenSearch - Scroll }
+ *
+ * @memberOf API-Scroll
+ *
+ * @param {Object} params
+ * @param {string} [params.scroll_id] The ID of the scroll to be terminated. Use `_all` to close all open scroll contexts.
+ *
+ * @param {Object} [options] - Options for {@link Transport#request}
+ * @param {function} [callback] - Callback that handles errors and response
+ *
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
+ */
+function clearScrollApi(params, options, callback) {
+  [params, options, callback] = normalizeArguments(params, options, callback);
+
+  let { method, body, scrollId, scroll_id, ...querystring } = params;
+  querystring = snakeCaseKeys(acceptedQuerystring, snakeCase, querystring);
+
+  let path = '';
+  if ((scroll_id || scrollId) != null) {
+    if (method == null) method = 'DELETE';
+    path = '/' + '_search' + '/' + 'scroll' + '/' + encodeURIComponent(scroll_id || scrollId);
+  } else {
+    if (method == null) method = 'DELETE';
+    path = '/' + '_search' + '/' + 'scroll';
   }
 
-  /**
-   * Returns the only cloud connection.
-   *
-   * @returns {object} connection
-   */
-  getConnection() {
-    return this.cloudConnection;
-  }
+  // build request object
+  const request = {
+    method,
+    path,
+    body: body || '',
+    querystring,
+  };
 
-  /**
-   * Empties the connection pool.
-   *
-   * @returns {ConnectionPool}
-   */
-  empty(callback) {
-    super.empty(() => {
-      this.cloudConnection = null;
-      callback();
-    });
-  }
-
-  /**
-   * Update the ConnectionPool with new connections.
-   *
-   * @param {array} array of connections
-   * @returns {ConnectionPool}
-   */
-  update(connections) {
-    super.update(connections);
-    this.cloudConnection = this.connections[0];
-    return this;
-  }
+  return this.transport.request(request, options, callback);
 }
 
-module.exports = CloudConnectionPool;
+module.exports = clearScrollApi;
 </code></pre>
         </article>
     </section>
