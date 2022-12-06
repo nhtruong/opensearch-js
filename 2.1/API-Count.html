@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Transport</title>
+    <title>JSDoc: Namespace: API-Count</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Transport</h1>
+    <h1 class="page-title">Namespace: API-Count</h1>
 
     
 
@@ -28,9 +28,7 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Transport<span class="signature">()</span><span class="type-signature"></span></h2>
-        
-            <div class="class-description">Default Transport Layer</div>
+        <h2>API-Count</h2>
         
     
 </header>
@@ -40,28 +38,7 @@
     
         
 
-    
-    <h2>Constructor</h2>
-    
-
-    
-    <h4 class="name" id="Transport"><span class="type-signature"></span>new Transport<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
 <dl class="details">
@@ -93,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_Transport.js.html">lib/Transport.js</a>, <a href="lib_Transport.js.html#line60">line 60</a>
+        <a href="api_api_count.js.html">api/api/count.js</a>, <a href="api_api_count.js.html#line35">line 35</a>
     </li></ul></dd>
     
 
@@ -105,24 +82,7 @@
 </dl>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
     
     </div>
 
@@ -149,12 +109,17 @@
     
 
     
-    <h4 class="name" id="request"><span class="type-signature"></span>request<span class="signature">(params, options, callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".countApi"><span class="type-signature">(static) </span>countApi<span class="signature">(params, options, callback)</span><span class="type-signature"> &rarr; {Object|Promise.&lt;never>|*}</span></h4>
     
 
     
 
 
+
+<div class="description">
+    The count API gives you quick access to the number of documents that match a query. You can also use it to check the document count of an index, data stream, or cluster.
+<br/> See Also: <a href="https://opensearch.org/docs/latest/api-reference/count/">OpenSearch - Bulk</a>
+</div>
 
 
 
@@ -223,6 +188,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -233,13 +200,13 @@
 
         <tr>
             
-                <td class="name"><code>method</code></td>
+                <td class="name"><code>allow_no_indices</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">boolean</span>
 
 
             
@@ -247,6 +214,8 @@
 
             
                 <td class="attributes">
+                
+                    &lt;optional><br>
                 
 
                 
@@ -256,54 +225,26 @@
             
 
             
-
-            <td class="description last">HTTP Method (e.g. HEAD, GET, POST...)</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>path</code></td>
-            
-
-            <td class="type">
-            
+                <td class="default">
                 
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-
-                
-
+                    false
                 
                 </td>
             
 
-            
-
-            <td class="description last">Relative URL path</td>
+            <td class="description last">If false, the request returns an error if any wildcard expression or index alias targets any closed or missing indices.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>body</code></td>
+                <td class="name"><code>analyzer</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
-|
-
 <span class="param-type">string</span>
 
 
@@ -323,23 +264,63 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">Body of a standard request.</td>
+            <td class="description last">The analyzer to use in the query string.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>bulkBody</code></td>
+                <td class="name"><code>analyze_wildcard</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;Object></span>
-|
+<span class="param-type">boolean</span>
 
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Specifies whether to analyze wildcard and prefix queries.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>default_operator</code></td>
+            
+
+            <td class="type">
+            
+                
 <span class="param-type">string</span>
 
 
@@ -359,23 +340,26 @@
             
 
             
+                <td class="default">
+                
+                    'OR'
+                
+                </td>
+            
 
-            <td class="description last">Body of a bulk request.</td>
+            <td class="description last">Indicates whether the default operator for a string query should be 'AND' or 'OR'.</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>querystring</code></td>
+                <td class="name"><code>df</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;Object></span>
-|
-
 <span class="param-type">string</span>
 
 
@@ -395,8 +379,277 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
-            <td class="description last">Querystring params.</td>
+            <td class="description last">The default field in case a field prefix is not provided in the query string.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>expand_wildcards</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    open
+                
+                </td>
+            
+
+            <td class="description last">Expands wildcard expressions to concrete indices. Combine multiple values with commas. Supported values are 'all', 'open', 'closed', 'hidden', and 'none'.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>ignore_unavailable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Specifies whether to include missing or closed indices in the response.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>lenient</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last">Specifies whether OpenSearch should accept requests if queries have format errors (for example, querying a text field for an integer).</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>min_score</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Include only documents with a minimum '_score' value in the result.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>routing</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Value used to route the operation to a specific shard.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>preference</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Specifies which shard or node OpenSearch should perform the count operation on.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>terminate_after</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">The maximum number of documents OpenSearch should process before terminating the request.</td>
         </tr>
 
     
@@ -426,338 +679,7 @@
 
             
 
-            <td class="description last">
-                <h6>Properties</h6>
-                
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-        <th>Attributes</th>
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Request ID</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>context</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Object used for observability</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>maxRetries</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Max number of retries</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>compression</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">false</span>
-|
-
-<span class="param-type">'gzip'</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Request body compression, if any</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>asStream</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">boolean</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Whether to emit the response as stream</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>ignore</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number></span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Response's Error Status Codes to ignore</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>headers</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Request headers</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>querystring</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-|
-
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Request's query string</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>requestTimeout</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
-
-            
-
-            <td class="description last">Max request timeout in milliseconds</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-            </td>
+            <td class="description last">Options for <a href="Transport.html#request">Transport#request</a></td>
         </tr>
 
     
@@ -821,7 +743,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="lib_Transport.js.html">lib/Transport.js</a>, <a href="lib_Transport.js.html#line135">line 135</a>
+        <a href="api_api_count.js.html">api/api/count.js</a>, <a href="api_api_count.js.html#line98">line 98</a>
     </li></ul></dd>
     
 
@@ -846,6 +768,34 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <a href="https://opensearch.org/docs/latest/api-reference/count/#response">Count Response</a>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">Promise.&lt;never></span>
+|
+
+<span class="param-type">*</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 

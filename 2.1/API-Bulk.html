@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Namespace: API-Scroll</title>
+    <title>JSDoc: Namespace: API-Bulk</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Namespace: API-Scroll</h1>
+    <h1 class="page-title">Namespace: API-Bulk</h1>
 
     
 
@@ -28,7 +28,7 @@
 
 <header>
     
-        <h2>API-Scroll</h2>
+        <h2>API-Bulk</h2>
         
     
 </header>
@@ -70,7 +70,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api_api_clear_scroll.js.html">api/api/clear_scroll.js</a>, <a href="api_api_clear_scroll.js.html#line35">line 35</a>
+        <a href="api_api_bulk.js.html">api/api/bulk.js</a>, <a href="api_api_bulk.js.html#line35">line 35</a>
     </li></ul></dd>
     
 
@@ -109,7 +109,7 @@
     
 
     
-    <h4 class="name" id=".clearScrollApi"><span class="type-signature">(static) </span>clearScrollApi<span class="signature">(params, options<span class="signature-attributes">opt</span>, callback<span class="signature-attributes">opt</span>)</span><span class="type-signature"> &rarr; {Object|Promise.&lt;never>|*}</span></h4>
+    <h4 class="name" id=".bulkApi"><span class="type-signature">(static) </span>bulkApi<span class="signature">(params, options, callback)</span><span class="type-signature"> &rarr; {Object|Promise.&lt;never>|*}</span></h4>
     
 
     
@@ -117,8 +117,10 @@
 
 
 <div class="description">
-    Close the search context when you’re done scrolling, because the scroll operation continues to consume computing resources until the timeout.
-<br/> See Also: <a href="https://opensearch.org/docs/latest/api-reference/scroll/">OpenSearch - Scroll </a>
+    The bulk operation lets you add, update, or delete many documents in a single request.
+Compared to individual OpenSearch indexing requests, the bulk operation has significant performance benefits.
+Whenever practical, we recommend batching indexing operations into bulk requests.
+<br/> See Also: <a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk/">OpenSearch - Bulk</a>
 </div>
 
 
@@ -141,8 +143,6 @@
 
         <th>Type</th>
 
-        
-        <th>Attributes</th>
         
 
         
@@ -168,14 +168,6 @@
             
             </td>
 
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
             
 
             
@@ -208,7 +200,38 @@
 
         <tr>
             
-                <td class="name"><code>scroll_id</code></td>
+                <td class="name"><code>body</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#request-body">Request Body</a></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
             
 
             <td class="type">
@@ -234,7 +257,35 @@
 
             
 
-            <td class="description last">The ID of the scroll to be terminated. Use `_all` to close all open scroll contexts.</td>
+            <td class="description last">Specifying the index means you don’t need to include it in the request body.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>...</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#url-parameters">URL parameters</a></td>
         </tr>
 
     
@@ -261,16 +312,6 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
@@ -293,16 +334,6 @@
             
             </td>
 
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
             
 
             
@@ -348,7 +379,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="api_api_clear_scroll.js.html">api/api/clear_scroll.js</a>, <a href="api_api_clear_scroll.js.html#line55">line 55</a>
+        <a href="api_api_bulk.js.html">api/api/bulk.js</a>, <a href="api_api_bulk.js.html#line86">line 86</a>
     </li></ul></dd>
     
 
@@ -376,6 +407,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    <a href="https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#response">Bulk Response</a>
+</div>
+
 
 
 <dl>
