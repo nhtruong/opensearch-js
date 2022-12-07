@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: api/api/create.js</title>
+    <title>JSDoc: Source: api/api/put_script.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: api/api/create.js</h1>
+    <h1 class="page-title">Source: api/api/put_script.js</h1>
 
     
 
@@ -62,13 +62,10 @@
 
 const { handleError, snakeCaseKeys, normalizeArguments, kConfigurationError } = require('../utils');
 const acceptedQuerystring = [
-  'wait_for_active_shards',
-  'refresh',
-  'routing',
+  'cluster_manager_timeout',
   'timeout',
-  'version',
-  'version_type',
-  'pipeline',
+  'master_timeout',
+  'context',
   'pretty',
   'human',
   'error_trace',
@@ -76,39 +73,30 @@ const acceptedQuerystring = [
   'filter_path',
 ];
 const snakeCase = {
-  waitForActiveShards: 'wait_for_active_shards',
-  versionType: 'version_type',
+  clusterManagerTimeout: 'cluster_manager_timeout',
+  masterTimeout: 'master_timeout',
   errorTrace: 'error_trace',
   filterPath: 'filter_path',
 };
 
 /**
- * Adds a document with a predefined ID to an index.
- * &lt;br/> See Also: {@link https://opensearch.org/docs/2.4/api-reference/document-apis/index-document/ OpenSearch - Index Document}
- *
- * @memberOf API-Document
+ * Creates or updates a script.
+ * &lt;br/> See also: {@link https://opensearch.org/docs/latest/api-reference/script-apis/create-stored-script/ OpenSearch - Create or update stored script}
+ * @memberOf API-Script
  *
  * @param {Object} params
- * @param {string} params.index - Name of the index.
- * @param {string} params.id - A unique identifier to attach to the document.
- * @param {Object} params.body - The content of the document.
- * @param {number} [params.if_seq_no] - Only perform the index operation if the document has the specified sequence number.
- * @param {number} [params.if_primary_term] - Only perform the index operation if the document has the specified primary term.
- * @param {string} [params.pipeline] - Route the index operation to a certain pipeline.
- * @param {string} [params.routing] - value used to assign the index operation to a specific shard.
- * @param {string} [params.refresh=false] - If true, OpenSearch refreshes shards to make the operation visible to searching. Valid options are 'true', 'false', and 'wait_for', which tells OpenSearch to wait for a refresh before executing the operation.
- * @param {string} [params.timeout=1m] - How long to wait for a response from the cluster.
- * @param {number} [params.version] - The document’s version number.
- * @param {number} [params.version_type] - Specific version type (options: 'external' and 'external_gte')
- * @param {string} [params.wait_for_active_shards] - The number of active shards that must be available before OpenSearch processes the request. Default is 1 (only the primary shard). Set to all or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the operation to succeed.
- * @param {boolean} [params.require_alias=false] - Specifies whether the target index must be an index alias.
+ * @param {string} params.id - Stored script or search template name
+ * @param {string} params.body - The script
+ * @param {string} [params.context] - Context in which the script or search template is to run. To prevent errors, the API immediately compiles the script or template in this context.
+ * @param {string} [params.timeout=30s] - Explicit operation timeout
+ * @param {string} [params.cluster_manager_timeout] - Specify timeout for connection to cluster_manager
  *
- * @param {Object} options - Options for {@link Transport#request}
- * @param {function} callback - Callback that handles errors and response
+ * @param {Object} [options] - Options for {@link Transport#request}
+ * @param {function} [callback] - Callback that handles errors and response
  *
- * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/2.4/api-reference/document-apis/index-document/#response Index Response}
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
  */
-function createApi(params, options, callback) {
+function putScriptApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
   // check required parameters
@@ -116,33 +104,27 @@ function createApi(params, options, callback) {
     const err = new this[kConfigurationError]('Missing required parameter: id');
     return handleError(err, callback);
   }
-  if (params.index == null) {
-    const err = new this[kConfigurationError]('Missing required parameter: index');
-    return handleError(err, callback);
-  }
   if (params.body == null) {
     const err = new this[kConfigurationError]('Missing required parameter: body');
     return handleError(err, callback);
   }
 
-  let { method, body, id, index, type, ...querystring } = params;
+  // check required url components
+  if (params.context != null &amp;&amp; params.id == null) {
+    const err = new this[kConfigurationError]('Missing required parameter of the url: id');
+    return handleError(err, callback);
+  }
+
+  let { method, body, id, context, ...querystring } = params;
   querystring = snakeCaseKeys(acceptedQuerystring, snakeCase, querystring);
 
   let path = '';
-  if (index != null &amp;&amp; type != null &amp;&amp; id != null) {
+  if (id != null &amp;&amp; context != null) {
     if (method == null) method = 'PUT';
-    path =
-      '/' +
-      encodeURIComponent(index) +
-      '/' +
-      encodeURIComponent(type) +
-      '/' +
-      encodeURIComponent(id) +
-      '/' +
-      '_create';
+    path = '/' + '_scripts' + '/' + encodeURIComponent(id) + '/' + encodeURIComponent(context);
   } else {
     if (method == null) method = 'PUT';
-    path = '/' + encodeURIComponent(index) + '/' + '_create' + '/' + encodeURIComponent(id);
+    path = '/' + '_scripts' + '/' + encodeURIComponent(id);
   }
 
   // build request object
@@ -156,7 +138,7 @@ function createApi(params, options, callback) {
   return this.transport.request(request, options, callback);
 }
 
-module.exports = createApi;
+module.exports = putScriptApi;
 </code></pre>
         </article>
     </section>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: api/api/delete_by_query_rethrottle.js</title>
+    <title>JSDoc: Source: api/api/get_script.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: api/api/delete_by_query_rethrottle.js</h1>
+    <h1 class="page-title">Source: api/api/get_script.js</h1>
 
     
 
@@ -60,9 +60,12 @@
 /* eslint camelcase: 0 */
 /* eslint no-unused-vars: 0 */
 
+/** @namespace API-Script */
+
 const { handleError, snakeCaseKeys, normalizeArguments, kConfigurationError } = require('../utils');
 const acceptedQuerystring = [
-  'requests_per_second',
+  'cluster_manager_timeout',
+  'master_timeout',
   'pretty',
   'human',
   'error_trace',
@@ -70,60 +73,54 @@ const acceptedQuerystring = [
   'filter_path',
 ];
 const snakeCase = {
-  requestsPerSecond: 'requests_per_second',
+  clusterManagerTimeout: 'cluster_manager_timeout',
+  masterTimeout: 'master_timeout',
   errorTrace: 'error_trace',
   filterPath: 'filter_path',
 };
 
 /**
- * Changes the number of requests per second for a particular Delete By Query operation.
- *
- * @memberOf API-Document
+ * Retrieves a stored script.
+ * &lt;br/> See also: {@link https://opensearch.org/docs/latest/api-reference/script-apis/get-stored-script/ OpenSearch - Get Stored Script}
+ * @memberOf API-Script
  *
  * @param {Object} params
- * @param {string} params.task_id - The task id to rethrottle
- * @param {number} params.requests_per_second - The throttle to set on this request in floating sub-requests per second. -1 means set no throttle.
+ * @param {string} params.id - Stored script or search template name
+ * @param {string} [params.cluster_manager_timeout] - Specify timeout for connection to cluster_manager
  *
- * @param {Object} options - Options for {@link Transport#request}
- * @param {function} callback - Callback that handles errors and response
+ * @param {Object} [options] - Options for {@link Transport#request}
+ * @param {function} [callback] - Callback that handles errors and response
  *
  * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
  */
-function deleteByQueryRethrottleApi(params, options, callback) {
+function getScriptApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
   // check required parameters
-  if (params.task_id == null &amp;&amp; params.taskId == null) {
-    const err = new this[kConfigurationError]('Missing required parameter: task_id or taskId');
-    return handleError(err, callback);
-  }
-  if (params.requests_per_second == null &amp;&amp; params.requestsPerSecond == null) {
-    const err = new this[kConfigurationError](
-      'Missing required parameter: requests_per_second or requestsPerSecond'
-    );
+  if (params.id == null) {
+    const err = new this[kConfigurationError]('Missing required parameter: id');
     return handleError(err, callback);
   }
 
-  let { method, body, taskId, task_id, ...querystring } = params;
+  let { method, body, id, ...querystring } = params;
   querystring = snakeCaseKeys(acceptedQuerystring, snakeCase, querystring);
 
   let path = '';
-  if (method == null) method = 'POST';
-  path =
-    '/' + '_delete_by_query' + '/' + encodeURIComponent(task_id || taskId) + '/' + '_rethrottle';
+  if (method == null) method = 'GET';
+  path = '/' + '_scripts' + '/' + encodeURIComponent(id);
 
   // build request object
   const request = {
     method,
     path,
-    body: body || '',
+    body: null,
     querystring,
   };
 
   return this.transport.request(request, options, callback);
 }
 
-module.exports = deleteByQueryRethrottleApi;
+module.exports = getScriptApi;
 </code></pre>
         </article>
     </section>

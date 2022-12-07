@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: api/api/delete_by_query_rethrottle.js</title>
+    <title>JSDoc: Source: api/api/scripts_painless_execute.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: api/api/delete_by_query_rethrottle.js</h1>
+    <h1 class="page-title">Source: api/api/scripts_painless_execute.js</h1>
 
     
 
@@ -61,56 +61,31 @@
 /* eslint no-unused-vars: 0 */
 
 const { handleError, snakeCaseKeys, normalizeArguments, kConfigurationError } = require('../utils');
-const acceptedQuerystring = [
-  'requests_per_second',
-  'pretty',
-  'human',
-  'error_trace',
-  'source',
-  'filter_path',
-];
-const snakeCase = {
-  requestsPerSecond: 'requests_per_second',
-  errorTrace: 'error_trace',
-  filterPath: 'filter_path',
-};
+const acceptedQuerystring = ['pretty', 'human', 'error_trace', 'source', 'filter_path'];
+const snakeCase = { errorTrace: 'error_trace', filterPath: 'filter_path' };
 
 /**
- * Changes the number of requests per second for a particular Delete By Query operation.
- *
- * @memberOf API-Document
+ * Execute Painless script
+ * &lt;br/> See also: {@link https://opensearch.org/docs/latest/api-reference/script-apis/exec-script/ OpenSearch - Execute Painless script}
+ * @memberOf API-Script
  *
  * @param {Object} params
- * @param {string} params.task_id - The task id to rethrottle
- * @param {number} params.requests_per_second - The throttle to set on this request in floating sub-requests per second. -1 means set no throttle.
+ * @param {string} params.body - The painless script
  *
- * @param {Object} options - Options for {@link Transport#request}
- * @param {function} callback - Callback that handles errors and response
+ * @param {Object} [options] - Options for {@link Transport#request}
+ * @param {function} [callback] - Callback that handles errors and response
  *
  * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
  */
-function deleteByQueryRethrottleApi(params, options, callback) {
+function scriptsPainlessExecuteApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
-  // check required parameters
-  if (params.task_id == null &amp;&amp; params.taskId == null) {
-    const err = new this[kConfigurationError]('Missing required parameter: task_id or taskId');
-    return handleError(err, callback);
-  }
-  if (params.requests_per_second == null &amp;&amp; params.requestsPerSecond == null) {
-    const err = new this[kConfigurationError](
-      'Missing required parameter: requests_per_second or requestsPerSecond'
-    );
-    return handleError(err, callback);
-  }
-
-  let { method, body, taskId, task_id, ...querystring } = params;
+  let { method, body, ...querystring } = params;
   querystring = snakeCaseKeys(acceptedQuerystring, snakeCase, querystring);
 
   let path = '';
-  if (method == null) method = 'POST';
-  path =
-    '/' + '_delete_by_query' + '/' + encodeURIComponent(task_id || taskId) + '/' + '_rethrottle';
+  if (method == null) method = body == null ? 'GET' : 'POST';
+  path = '/' + '_scripts' + '/' + 'painless' + '/' + '_execute';
 
   // build request object
   const request = {
@@ -123,7 +98,7 @@ function deleteByQueryRethrottleApi(params, options, callback) {
   return this.transport.request(request, options, callback);
 }
 
-module.exports = deleteByQueryRethrottleApi;
+module.exports = scriptsPainlessExecuteApi;
 </code></pre>
         </article>
     </section>
