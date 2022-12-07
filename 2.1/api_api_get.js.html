@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: api/api/bulk.js</title>
+    <title>JSDoc: Source: api/api/get.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: api/api/bulk.js</h1>
+    <h1 class="page-title">Source: api/api/get.js</h1>
 
     
 
@@ -62,18 +62,18 @@
 
 const { handleError, snakeCaseKeys, normalizeArguments, kConfigurationError } = require('../utils');
 const acceptedQuerystring = [
-  'wait_for_active_shards',
+  'stored_fields',
+  'preference',
+  'realtime',
   'refresh',
   'routing',
-  'timeout',
-  'type',
   '_source',
   '_source_excludes',
   '_source_exclude',
   '_source_includes',
   '_source_include',
-  'pipeline',
-  'require_alias',
+  'version',
+  'version_type',
   'pretty',
   'human',
   'error_trace',
@@ -81,81 +81,84 @@ const acceptedQuerystring = [
   'filter_path',
 ];
 const snakeCase = {
-  waitForActiveShards: 'wait_for_active_shards',
+  storedFields: 'stored_fields',
   _sourceExcludes: '_source_excludes',
   _sourceExclude: '_source_exclude',
   _sourceIncludes: '_source_includes',
   _sourceInclude: '_source_include',
-  requireAlias: 'require_alias',
+  versionType: 'version_type',
   errorTrace: 'error_trace',
   filterPath: 'filter_path',
 };
 
 /**
- * The bulk operation lets you add, update, or delete many documents in a single request.
- * Compared to individual OpenSearch indexing requests, the bulk operation has significant performance benefits.
- * Whenever practical, we recommend batching indexing operations into bulk requests.
- * &lt;br/> See Also: {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/|OpenSearch - Bulk}
+ * Retrieve a document
+ * &lt;br/> See Also: {@link https://opensearch.org/docs/2.4/api-reference/document-apis/get-documents/ OpenSearch - Get Document}
  *
  * @memberOf API-Document
  *
  * @param {Object} params
- * @param {Object[]} params.body - {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#request-body|Request Body}
- * @param {string} [params.index] - Specifying the index means you don’t need to include it in the request body.
- * @param {string} [params.pipeline] - The pipeline ID for preprocessing documents.
- * @param {string} [params.routing] - Routes the request to the specified shard.
- * @param {string} [params.refresh=false] - If true, OpenSearch refreshes shards to make the operation visible to searching. Valid options are 'true', 'false', and 'wait_for', which tells OpenSearch to wait for a refresh before executing the operation.
- * @param {string} [params.timeout=1m] - How long to wait for a response from the cluster.
- * @param {string} [params.wait_for_active_shards] - The number of active shards that must be available before OpenSearch processes the request. Default is 1 (only the primary shard). Set to all or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the operation to succeed.
- * @param {boolean} [params.require_alias=false] - Specifies whether the target index must be an index alias.
+ * @param {string} params.index - Name of the index.
+ * @param {string} params.id - Document ID.
+ * @param {string} [params.preference] - Specifies a preference of which shard to retrieve results from. Available options are '_local', which tells the operation to retrieve results from a locally allocated shard replica, and a custom string value assigned to a specific shard replica. By default, OpenSearch executes get document operations on random shards.
+ * @param {boolean} [params.realtime=true] - Specifies whether the operation should run in realtime. If false, the operation waits for the index to refresh to analyze the source to retrieve data, which makes the operation near-realtime.
+ * @param {boolean} [params.refresh=false] - If true, OpenSearch refreshes shards to make the get operation available to search results. Valid options are 'true', 'false', and 'wait_for', which tells OpenSearch to wait for a refresh before executing the operation.
+ * @param {string} [params.routing] - A value used to route the operation to a specific shard.
+ * @param {boolean} [params.stored_fields=false] - Whether the get operation should retrieve fields stored in the index.
+ * @param {string} [params._source=true] - Whether to include the '_source' field in the response body.
+ * @param {string} [params._source_excludes] - A comma-separated list of source fields to exclude in the query response.
+ * @param {string} [params._source_includes] - A comma-separated list of source fields to include in the query response.
+ * @param {number} [params.version] - The document’s version number.
+ * @param {number} [params.version_type] - Specific version type (options: 'external' and 'external_gte')
  *
  * @param {Object} options - Options for {@link Transport#request}
  * @param {function} callback - Callback that handles errors and response
  *
- * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#response|Bulk Response}
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/2.4/api-reference/document-apis/get-documents/#response Get Response}
  */
-function bulkApi(params, options, callback) {
+function getApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
   // check required parameters
-  if (params.body == null) {
-    const err = new this[kConfigurationError]('Missing required parameter: body');
+  if (params.id == null) {
+    const err = new this[kConfigurationError]('Missing required parameter: id');
+    return handleError(err, callback);
+  }
+  if (params.index == null) {
+    const err = new this[kConfigurationError]('Missing required parameter: index');
     return handleError(err, callback);
   }
 
-  // check required url components
-  if (params.type != null &amp;&amp; params.index == null) {
-    const err = new this[kConfigurationError]('Missing required parameter of the url: index');
-    return handleError(err, callback);
-  }
-
-  let { method, body, index, type, ...querystring } = params;
+  let { method, body, id, index, type, ...querystring } = params;
   querystring = snakeCaseKeys(acceptedQuerystring, snakeCase, querystring);
 
   let path = '';
-  if (index != null &amp;&amp; type != null) {
-    if (method == null) method = 'POST';
-    path = '/' + encodeURIComponent(index) + '/' + encodeURIComponent(type) + '/' + '_bulk';
-  } else if (index != null) {
-    if (method == null) method = 'POST';
-    path = '/' + encodeURIComponent(index) + '/' + '_bulk';
+  if (index != null &amp;&amp; type != null &amp;&amp; id != null) {
+    if (method == null) method = 'GET';
+    path =
+      '/' +
+      encodeURIComponent(index) +
+      '/' +
+      encodeURIComponent(type) +
+      '/' +
+      encodeURIComponent(id);
   } else {
-    if (method == null) method = 'POST';
-    path = '/' + '_bulk';
+    if (method == null) method = 'GET';
+    path = '/' + encodeURIComponent(index) + '/' + '_doc' + '/' + encodeURIComponent(id);
   }
 
   // build request object
   const request = {
     method,
     path,
-    bulkBody: body,
+    body: null,
     querystring,
   };
 
   return this.transport.request(request, options, callback);
 }
 
-module.exports = bulkApi;
+module.exports = getApi;
 </code></pre>
         </article>
     </section>

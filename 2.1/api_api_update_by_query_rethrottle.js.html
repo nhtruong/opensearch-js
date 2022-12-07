@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: api/api/bulk.js</title>
+    <title>JSDoc: Source: api/api/update_by_query_rethrottle.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: api/api/bulk.js</h1>
+    <h1 class="page-title">Source: api/api/update_by_query_rethrottle.js</h1>
 
     
 
@@ -62,18 +62,7 @@
 
 const { handleError, snakeCaseKeys, normalizeArguments, kConfigurationError } = require('../utils');
 const acceptedQuerystring = [
-  'wait_for_active_shards',
-  'refresh',
-  'routing',
-  'timeout',
-  'type',
-  '_source',
-  '_source_excludes',
-  '_source_exclude',
-  '_source_includes',
-  '_source_include',
-  'pipeline',
-  'require_alias',
+  'requests_per_second',
   'pretty',
   'human',
   'error_trace',
@@ -81,81 +70,60 @@ const acceptedQuerystring = [
   'filter_path',
 ];
 const snakeCase = {
-  waitForActiveShards: 'wait_for_active_shards',
-  _sourceExcludes: '_source_excludes',
-  _sourceExclude: '_source_exclude',
-  _sourceIncludes: '_source_includes',
-  _sourceInclude: '_source_include',
-  requireAlias: 'require_alias',
+  requestsPerSecond: 'requests_per_second',
   errorTrace: 'error_trace',
   filterPath: 'filter_path',
 };
 
 /**
- * The bulk operation lets you add, update, or delete many documents in a single request.
- * Compared to individual OpenSearch indexing requests, the bulk operation has significant performance benefits.
- * Whenever practical, we recommend batching indexing operations into bulk requests.
- * &lt;br/> See Also: {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/|OpenSearch - Bulk}
+ * Changes the number of requests per second for a particular Update By Query operation.
  *
  * @memberOf API-Document
  *
  * @param {Object} params
- * @param {Object[]} params.body - {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#request-body|Request Body}
- * @param {string} [params.index] - Specifying the index means you don’t need to include it in the request body.
- * @param {string} [params.pipeline] - The pipeline ID for preprocessing documents.
- * @param {string} [params.routing] - Routes the request to the specified shard.
- * @param {string} [params.refresh=false] - If true, OpenSearch refreshes shards to make the operation visible to searching. Valid options are 'true', 'false', and 'wait_for', which tells OpenSearch to wait for a refresh before executing the operation.
- * @param {string} [params.timeout=1m] - How long to wait for a response from the cluster.
- * @param {string} [params.wait_for_active_shards] - The number of active shards that must be available before OpenSearch processes the request. Default is 1 (only the primary shard). Set to all or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the operation to succeed.
- * @param {boolean} [params.require_alias=false] - Specifies whether the target index must be an index alias.
+ * @param {string} params.task_id - The task id to rethrottle
+ * @param {number} params.requests_per_second - The throttle to set on this request in floating sub-requests per second. -1 means set no throttle.
  *
  * @param {Object} options - Options for {@link Transport#request}
  * @param {function} callback - Callback that handles errors and response
  *
- * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#response|Bulk Response}
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*}
  */
-function bulkApi(params, options, callback) {
+function updateByQueryRethrottleApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
   // check required parameters
-  if (params.body == null) {
-    const err = new this[kConfigurationError]('Missing required parameter: body');
+  if (params.task_id == null &amp;&amp; params.taskId == null) {
+    const err = new this[kConfigurationError]('Missing required parameter: task_id or taskId');
+    return handleError(err, callback);
+  }
+  if (params.requests_per_second == null &amp;&amp; params.requestsPerSecond == null) {
+    const err = new this[kConfigurationError](
+      'Missing required parameter: requests_per_second or requestsPerSecond'
+    );
     return handleError(err, callback);
   }
 
-  // check required url components
-  if (params.type != null &amp;&amp; params.index == null) {
-    const err = new this[kConfigurationError]('Missing required parameter of the url: index');
-    return handleError(err, callback);
-  }
-
-  let { method, body, index, type, ...querystring } = params;
+  let { method, body, taskId, task_id, ...querystring } = params;
   querystring = snakeCaseKeys(acceptedQuerystring, snakeCase, querystring);
 
   let path = '';
-  if (index != null &amp;&amp; type != null) {
-    if (method == null) method = 'POST';
-    path = '/' + encodeURIComponent(index) + '/' + encodeURIComponent(type) + '/' + '_bulk';
-  } else if (index != null) {
-    if (method == null) method = 'POST';
-    path = '/' + encodeURIComponent(index) + '/' + '_bulk';
-  } else {
-    if (method == null) method = 'POST';
-    path = '/' + '_bulk';
-  }
+  if (method == null) method = 'POST';
+  path =
+    '/' + '_update_by_query' + '/' + encodeURIComponent(task_id || taskId) + '/' + '_rethrottle';
 
   // build request object
   const request = {
     method,
     path,
-    bulkBody: body,
+    body: body || '',
     querystring,
   };
 
   return this.transport.request(request, options, callback);
 }
 
-module.exports = bulkApi;
+module.exports = updateByQueryRethrottleApi;
 </code></pre>
         </article>
     </section>

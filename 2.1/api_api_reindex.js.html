@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: api/api/bulk.js</title>
+    <title>JSDoc: Source: api/api/reindex.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: api/api/bulk.js</h1>
+    <h1 class="page-title">Source: api/api/reindex.js</h1>
 
     
 
@@ -62,18 +62,14 @@
 
 const { handleError, snakeCaseKeys, normalizeArguments, kConfigurationError } = require('../utils');
 const acceptedQuerystring = [
-  'wait_for_active_shards',
   'refresh',
-  'routing',
   'timeout',
-  'type',
-  '_source',
-  '_source_excludes',
-  '_source_exclude',
-  '_source_includes',
-  '_source_include',
-  'pipeline',
-  'require_alias',
+  'wait_for_active_shards',
+  'wait_for_completion',
+  'requests_per_second',
+  'scroll',
+  'slices',
+  'max_docs',
   'pretty',
   'human',
   'error_trace',
@@ -82,39 +78,36 @@ const acceptedQuerystring = [
 ];
 const snakeCase = {
   waitForActiveShards: 'wait_for_active_shards',
-  _sourceExcludes: '_source_excludes',
-  _sourceExclude: '_source_exclude',
-  _sourceIncludes: '_source_includes',
-  _sourceInclude: '_source_include',
-  requireAlias: 'require_alias',
+  waitForCompletion: 'wait_for_completion',
+  requestsPerSecond: 'requests_per_second',
+  maxDocs: 'max_docs',
   errorTrace: 'error_trace',
   filterPath: 'filter_path',
 };
 
 /**
- * The bulk operation lets you add, update, or delete many documents in a single request.
- * Compared to individual OpenSearch indexing requests, the bulk operation has significant performance benefits.
- * Whenever practical, we recommend batching indexing operations into bulk requests.
- * &lt;br/> See Also: {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/|OpenSearch - Bulk}
+ * Copy all or a subset of your data from a source index into a destination index.
+ * &lt;br/> See Also: {@link https://opensearch.org/docs/2.4/api-reference/document-apis/reindex/ OpenSearch - Reindex Document}
  *
  * @memberOf API-Document
  *
  * @param {Object} params
- * @param {Object[]} params.body - {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#request-body|Request Body}
- * @param {string} [params.index] - Specifying the index means you don’t need to include it in the request body.
- * @param {string} [params.pipeline] - The pipeline ID for preprocessing documents.
- * @param {string} [params.routing] - Routes the request to the specified shard.
- * @param {string} [params.refresh=false] - If true, OpenSearch refreshes shards to make the operation visible to searching. Valid options are 'true', 'false', and 'wait_for', which tells OpenSearch to wait for a refresh before executing the operation.
- * @param {string} [params.timeout=1m] - How long to wait for a response from the cluster.
- * @param {string} [params.wait_for_active_shards] - The number of active shards that must be available before OpenSearch processes the request. Default is 1 (only the primary shard). Set to all or a positive integer. Values greater than 1 require replicas. For example, if you specify a value of 3, the index must have two replicas distributed across two additional nodes for the operation to succeed.
- * @param {boolean} [params.require_alias=false] - Specifies whether the target index must be an index alias.
+ * @param {Object} params.body The search definition using the Query DSL and the prototype for the index request.
+ * @param {boolean} [params.refresh=false] Should the affected indexes be refreshed?
+ * @param {string} [params.timeout=30s] Time each individual bulk request should wait for shards that are unavailable.
+ * @param {string} [params.wait_for_active_shards] Sets the number of shard copies that must be active before proceeding with the reindex operation. Defaults to 1, meaning the primary shard only. Set to `all` for all shard copies, otherwise set to any non-negative value less than or equal to the total number of copies for the shard (number of replicas + 1)
+ * @param {boolean} [params.wait_for_completion=false] Should the request should block until the reindex is complete.
+ * @param {number} [params.requests_per_second=-1] The throttle to set on this request in sub-requests per second. -1 means no throttle.
+ * @param {string} [params.scroll=5m] Control how long to keep the search context alive
+ * @param {number|string} [params.slices=1] The number of slices this task should be divided into. 1 means the task isn't sliced into subtasks. Can be set to `auto`.
+ * @param {number} [params.max_docs] Maximum number of documents to process (default: all documents)
  *
  * @param {Object} options - Options for {@link Transport#request}
  * @param {function} callback - Callback that handles errors and response
  *
- * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/latest/api-reference/document-apis/bulk/#response|Bulk Response}
+ * @returns {{abort: function(), then: function(), catch: function()}|Promise&lt;never>|*} {@link https://opensearch.org/docs/2.4/api-reference/document-apis/reindex/#response Reindex Document Response}
  */
-function bulkApi(params, options, callback) {
+function reindexApi(params, options, callback) {
   [params, options, callback] = normalizeArguments(params, options, callback);
 
   // check required parameters
@@ -123,39 +116,25 @@ function bulkApi(params, options, callback) {
     return handleError(err, callback);
   }
 
-  // check required url components
-  if (params.type != null &amp;&amp; params.index == null) {
-    const err = new this[kConfigurationError]('Missing required parameter of the url: index');
-    return handleError(err, callback);
-  }
-
-  let { method, body, index, type, ...querystring } = params;
+  let { method, body, ...querystring } = params;
   querystring = snakeCaseKeys(acceptedQuerystring, snakeCase, querystring);
 
   let path = '';
-  if (index != null &amp;&amp; type != null) {
-    if (method == null) method = 'POST';
-    path = '/' + encodeURIComponent(index) + '/' + encodeURIComponent(type) + '/' + '_bulk';
-  } else if (index != null) {
-    if (method == null) method = 'POST';
-    path = '/' + encodeURIComponent(index) + '/' + '_bulk';
-  } else {
-    if (method == null) method = 'POST';
-    path = '/' + '_bulk';
-  }
+  if (method == null) method = 'POST';
+  path = '/' + '_reindex';
 
   // build request object
   const request = {
     method,
     path,
-    bulkBody: body,
+    body: body || '',
     querystring,
   };
 
   return this.transport.request(request, options, callback);
 }
 
-module.exports = bulkApi;
+module.exports = reindexApi;
 </code></pre>
         </article>
     </section>
