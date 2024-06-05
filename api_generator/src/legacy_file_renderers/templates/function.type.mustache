@@ -1,0 +1,20 @@
+  {{namespace}}: {
+  {{#functions}}
+    {{.}}<TResponse = Record<string, any>, TContext = Context>(
+      params?: Record<string, any>,
+      options?: TransportRequestOptions
+    ): TransportRequestPromise<ApiResponse<TResponse, TContext>>;
+    {{.}}<TResponse = Record<string, any>, TContext = Context>(
+      callback: callbackFn<TResponse, TContext>
+    ): TransportRequestCallback;
+    {{.}}<TResponse = Record<string, any>, TContext = Context>(
+      params: Record<string, any>,
+      callback: callbackFn<TResponse, TContext>
+    ): TransportRequestCallback;
+    {{.}}<TResponse = Record<string, any>, TContext = Context>(
+      params: Record<string, any>,
+      options: TransportRequestOptions,
+      callback: callbackFn<TResponse, TContext>
+    ): TransportRequestCallback;
+  {{/functions}}
+  };
