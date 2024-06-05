@@ -1,0 +1,36 @@
+{{{opensearch_license}}}
+{{{generated_code_warning}}}
+
+'use strict'
+
+const { kConfigurationError, apiFunc } = require('./utils')
+
+const kApiModules = Symbol('api modules')
+const kApiLoader = Symbol('api loader')
+
+function OpenSearchAPI (opts) {
+  this[kConfigurationError] = opts.ConfigurationError
+  this[kApiModules] = {}
+  this[kApiLoader] = function (path) {
+    if (this[kApiModules][path] === undefined) {
+      const ApiModule = require(path)
+      this[kApiModules][path] = new ApiModule(this.transport, this[kConfigurationError])
+    }
+    return this[kApiModules][path]
+  }
+}
+
+// Setup Root API Functions
+const cache = {}
+{{#root_functions}}
+OpenSearchAPI.prototype.{{name}} = apiFunc(cache, '{{{path}}}')
+{{/root_functions}}
+
+// Setup API Modules
+Object.defineProperties(OpenSearchAPI.prototype, {
+  {{#api_modules}}
+  {{name}}: { get () { return this[kApiLoader]('{{{path}}}') } },
+  {{/api_modules}}
+})
+
+module.exports = OpenSearchAPI;

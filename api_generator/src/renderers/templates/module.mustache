@@ -1,0 +1,23 @@
+{{{opensearch_license}}}
+{{{generated_code_warning}}}
+
+/** @namespace {{doc_namespace}} */
+
+'use strict';
+
+/* eslint camelcase: 0 */
+/* eslint no-unused-vars: 0 */
+
+const { apiFunc } = require('../utils');
+
+function {{module_name}}(transport, ConfigurationError) {
+  this.transport = transport;
+  this[kConfigurationError] = ConfigurationError;
+}
+
+const cache = {};
+{{#functions}}
+{{module_name}}.prototype.{{name}} = apiFunc(cache, '{{{path}}}')
+{{/functions}}
+
+module.exports = {{module_name}};
