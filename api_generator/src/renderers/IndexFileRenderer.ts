@@ -20,8 +20,7 @@ export default class IndexFileRenderer extends BaseRenderer {
   constructor (namespaces: Record<string, Namespace>) {
     super()
     this.root_namespace = namespaces._core
-    delete namespaces._core
-    this.namespaces = namespaces
+    this.namespaces = _.omit(namespaces, '_core')
   }
 
   view (): Record<string, any> {

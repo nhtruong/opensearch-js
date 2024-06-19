@@ -20,9 +20,10 @@ function OpenSearchAPI (opts) {
   }
 }
 
+
 // Setup Root API Functions
-const cache = {}
 /** @namespace {{doc_namespace}} */
+const cache = {}
 {{#root_functions}}
 OpenSearchAPI.prototype.{{name}} = apiFunc(cache, '{{{path}}}')
 {{/root_functions}}

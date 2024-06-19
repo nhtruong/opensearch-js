@@ -40,12 +40,3 @@ export default class ModuleFileRenderer extends BaseRenderer {
       })
   }
 }
-
-/*
-function apiFunc(cache, path) {
-  return function(...args) {
-    if (!cache[location]) cache[location] = require(path);
-    return cache[location](...args);
-  };
-}
- */

@@ -3,18 +3,15 @@
 
 'use strict';
 
-/* eslint camelcase: 0 */
-/* eslint no-unused-vars: 0 */
+const { apiFunc, kConfigurationError } = require('../../utils');
 
-const { apiFunc } = require('../utils');
+/** @namespace {{doc_namespace}} */
 
 function {{module_name}}(transport, ConfigurationError) {
   this.transport = transport;
   this[kConfigurationError] = ConfigurationError;
 }
-
 const cache = {};
-/** @namespace {{doc_namespace}} */
 {{#functions}}
 {{module_name}}.prototype.{{name}} = apiFunc(cache, '{{{path}}}');
 {{/functions}}
