@@ -12,7 +12,9 @@ import FunctionFileRenderer from './renderers/FunctionFileRenderer'
 import ModuleFileRenderer from './renderers/ModuleFileRenderer'
 import IndexFileRenderer from './renderers/IndexFileRenderer'
 
-const generator = new Generator('opensearch-openapi.yaml', 'path/to/output')
+const generator = new Generator('opensearch-openapi.yaml', './test_site')
+
+generator.generate()
 
 const ns = generator.namespaces.rollups
 const func_file = new FunctionFileRenderer(ns.operation_groups.explain, ns)

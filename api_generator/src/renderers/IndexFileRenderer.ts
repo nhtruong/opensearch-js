@@ -26,6 +26,7 @@ export default class IndexFileRenderer extends BaseRenderer {
 
   view (): Record<string, any> {
     return {
+      doc_namespace: this.root_namespace.doc_namespace,
       root_functions: this.#root_functions(),
       api_modules: this.#api_modules()
     }

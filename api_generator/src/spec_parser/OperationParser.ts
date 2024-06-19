@@ -52,7 +52,7 @@ export default class OperationParser {
     const raw_param: t.RawParameter = resolve_obj(raw, this._doc)
     if (raw_param['x-global']) return
     const schema = resolve_obj(raw_param.schema, this._doc) as t.Schema
-    const description = [raw_param.description, schema.description].filter((d) => d).join('. ')
+    const description = (raw_param.description ?? schema.description)?.replaceAll('\n', ' ')
     const deprecated = raw_param.deprecated ?? false
     const default_value = raw_param.default ?? schema.default
     return { ...raw_param, description, schema, deprecated, default: default_value }

@@ -1,8 +1,6 @@
 {{{opensearch_license}}}
 {{{generated_code_warning}}}
 
-/** @namespace {{doc_namespace}} */
-
 'use strict';
 
 /* eslint camelcase: 0 */
@@ -16,8 +14,9 @@ function {{module_name}}(transport, ConfigurationError) {
 }
 
 const cache = {};
+/** @namespace {{doc_namespace}} */
 {{#functions}}
-{{module_name}}.prototype.{{name}} = apiFunc(cache, '{{{path}}}')
+{{module_name}}.prototype.{{name}} = apiFunc(cache, '{{{path}}}');
 {{/functions}}
 
 module.exports = {{module_name}};

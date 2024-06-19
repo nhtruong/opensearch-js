@@ -39,7 +39,7 @@ function {{function_name}}(params, options, callback) {
   {{/path_params}}
 
   let path = [{{{path_components}}}].filter((c) => c != null).join('/');
-  method = {{{http_verb}}};
+  const method = {{{http_verb}}};
   body = body || '';
 
   {{#bulk_body}}

@@ -10,23 +10,26 @@
 import OperationGroup from './OperationGroup'
 import { type Operation } from './types'
 import _ from 'lodash'
+import * as path from 'path'
 
 export default class Namespace {
   readonly name: string
-  readonly root: boolean
+  readonly folder_path: string
   readonly module_name: string
   readonly file_name: string
+  readonly root: boolean
   readonly doc_namespace: string
   readonly prototype_name: string | undefined
   readonly operation_groups: Record<string, OperationGroup>
 
-  constructor (name: string, operations: Operation[]) {
+  constructor (name: string, operations: Operation[], parent_folder: string) {
     this.name = name
     this.root = name === '_core'
     this.prototype_name = _.camelCase(name)
     this.module_name = `${_.capitalize(_.camelCase(name))}Api`
-    this.file_name = this.name // Placeholder for now
-    this.doc_namespace = this.root ? 'API-Core' : `API-${_.capitalize(_.kebabCase(name))}`
+    this.folder_path = path.join(parent_folder, name)
+    this.file_name = `_${this.module_name}`
+    this.doc_namespace = this.root ? 'API-Core' : `API-${name.split('_').map(e => _.capitalize(e)).join('-')}`
     this.operation_groups =
       _.fromPairs(
         _.entries(
