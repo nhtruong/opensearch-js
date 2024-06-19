@@ -29,7 +29,7 @@ OpenSearchAPI.prototype.{{name}} = apiFunc(cache, '{{{path}}}')
 // Setup API Modules
 Object.defineProperties(OpenSearchAPI.prototype, {
   {{#api_modules}}
-  {{name}}: { get () { return this[kApiLoader]('{{{path}}}') } },
+  {{name}}: { get() { return this[kApiLoader]('{{{path}}}') } },
   {{/api_modules}}
 })
 
