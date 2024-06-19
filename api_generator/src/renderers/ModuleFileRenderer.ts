@@ -13,7 +13,7 @@ import type OperationGroup from '../spec_parser/OperationGroup'
 import _ from 'lodash'
 
 export default class ModuleFileRenderer extends BaseRenderer {
-  protected templateFile = 'module.mustache'
+  protected template_path = 'module.mustache'
   private readonly namespace: Namespace
 
   constructor (namespace: Namespace) {

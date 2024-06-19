@@ -14,7 +14,7 @@ import { type Parameter, type RequestBody } from '../spec_parser/types'
 import type Namespace from '../spec_parser/Namespace'
 
 export default class FunctionFileRenderer extends BaseRenderer {
-  protected templateFile = 'function.mustache'
+  protected template_path = 'function.mustache'
   private readonly group: OperationGroup
   private readonly namespace: Namespace
   private readonly params: Record<string, Parameter | RequestBody>

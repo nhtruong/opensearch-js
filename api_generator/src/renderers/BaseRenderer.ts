@@ -12,15 +12,20 @@ import fs from 'fs'
 import path from 'path'
 
 export default class BaseRenderer {
-  protected templateFile: string = ''
+  protected template_path: string = ''
+  protected output_path: string = ''
   view (): Record<string, any> {
     throw Error('Not implemented')
   }
 
   render (): string {
-    const template_path = path.join(__dirname, './templates', this.templateFile)
+    const template_path = path.join(__dirname, './templates', this.template_path)
     const template = fs.readFileSync(template_path, 'utf8')
     return Mustache.render(template, { ...this.#commons(), ...this.view() })
+  }
+
+  write_to_file (): void {
+    fs.writeFileSync(this.output_path, this.render())
   }
 
   #commons (): Record<string, any> {
