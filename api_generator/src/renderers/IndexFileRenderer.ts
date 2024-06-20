@@ -36,8 +36,8 @@ export default class IndexFileRenderer extends BaseRenderer {
       .sort((a, b) => a.prototype_name.localeCompare(b.prototype_name))
       .map((group: OperationGroup) => {
         return {
-          name: group.prototype_name,
-          path: group.file_name
+          prototype_name: group.prototype_name,
+          path: `./${this.root_namespace.folder_name}/${group.file_name}`
         }
       })
   }
@@ -47,8 +47,8 @@ export default class IndexFileRenderer extends BaseRenderer {
       .sort((a, b) => a.module_name.localeCompare(b.module_name))
       .map((namespace: Namespace) => {
         return {
-          name: namespace.prototype_name,
-          path: namespace.file_name
+          prototype_name: namespace.prototype_name,
+          path: `./${namespace.folder_name}/_api`
         }
       })
   }

@@ -20,18 +20,17 @@ function OpenSearchAPI (opts) {
   }
 }
 
-
 // Setup Root API Functions
 /** @namespace {{doc_namespace}} */
 const cache = {}
 {{#root_functions}}
-OpenSearchAPI.prototype.{{name}} = apiFunc(cache, '{{{path}}}')
+OpenSearchAPI.prototype.{{prototype_name}} = apiFunc(cache, '{{{path}}}')
 {{/root_functions}}
 
 // Setup API Modules
 Object.defineProperties(OpenSearchAPI.prototype, {
   {{#api_modules}}
-  {{name}}: { get() { return this[kApiLoader]('{{{path}}}') } },
+  {{prototype_name}}: { get() { return this[kApiLoader]('{{{path}}}') } },
   {{/api_modules}}
 })
 

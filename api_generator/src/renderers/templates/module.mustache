@@ -3,7 +3,7 @@
 
 'use strict';
 
-const { apiFunc, kConfigErr } = require('../../utils');
+const { apiFunc, kConfigErr } = require('../utils');
 
 /** @namespace {{doc_namespace}} */
 
@@ -13,7 +13,7 @@ function {{module_name}}(transport, ConfigurationError) {
 }
 const cache = {};
 {{#functions}}
-{{module_name}}.prototype.{{name}} = apiFunc(cache, '{{{path}}}');
+{{module_name}}.prototype.{{prototype_name}} = apiFunc(cache, './{{{file_name}}}');
 {{/functions}}
 
 module.exports = {{module_name}};

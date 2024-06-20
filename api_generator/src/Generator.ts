@@ -60,7 +60,7 @@ export default class Generator {
   #generate_module_files (): void {
     for (const ns of _.values(this.namespaces).filter(ns => !ns.root)) {
       const renderer = new ModuleFileRenderer(ns)
-      fs.writeFileSync(path.join(ns.folder_path, `${ns.file_name}.js`), renderer.render())
+      fs.writeFileSync(path.join(ns.folder_path, `_api.js`), renderer.render())
     }
   }
 

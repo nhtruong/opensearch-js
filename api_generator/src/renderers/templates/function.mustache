@@ -34,7 +34,7 @@ function {{function_name}}(params, options, callback) {
   {{.}} = parsePathParam({{.}});
   {{/path_params}}
 
-  let path = {{{path}}};
+  const path = {{{path}}};
   const method = {{{http_verb}}};
   {{^body_required}}
   body = body || '';

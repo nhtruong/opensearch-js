@@ -14,9 +14,9 @@ import * as path from 'path'
 
 export default class Namespace {
   readonly name: string
+  readonly folder_name: string
   readonly folder_path: string
   readonly module_name: string
-  readonly file_name: string
   readonly root: boolean
   readonly doc_namespace: string
   readonly prototype_name: string | undefined
@@ -27,8 +27,8 @@ export default class Namespace {
     this.root = name === '_core'
     this.prototype_name = _.camelCase(name)
     this.module_name = `${_.capitalize(_.camelCase(name))}Api`
-    this.folder_path = path.join(parent_folder, name)
-    this.file_name = `_${this.module_name}`
+    this.folder_name = this.name
+    this.folder_path = path.join(parent_folder, this.folder_name)
     this.doc_namespace = this.root ? 'API-Core' : `API-${name.split('_').map(e => _.capitalize(e)).join('-')}`
     this.operation_groups =
       _.fromPairs(

@@ -34,8 +34,8 @@ export default class ModuleFileRenderer extends BaseRenderer {
       .sort((a, b) => a.prototype_name.localeCompare(b.prototype_name))
       .map((group: OperationGroup) => {
         return {
-          name: group.prototype_name,
-          path: group.file_name
+          prototype_name: group.prototype_name,
+          file_name: group.file_name
         }
       })
   }
