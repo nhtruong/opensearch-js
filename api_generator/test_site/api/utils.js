@@ -28,34 +28,34 @@
 
 'use strict'
 
-const result = { body: null, statusCode: null, headers: null, warnings: null }
-const kConfigErr = Symbol('configuration error')
+const result = { body: null, statusCode: null, headers: null, warnings: null };
+const kConfigurationError = Symbol('configuration error');
 
-async function handleError (err, callback) {
+function handleError(err, callback) {
   if (callback) {
-    process.nextTick(callback, err, result)
-    return { then: noop, catch: noop, abort: noop }
+    process.nextTick(callback, err, result);
+    return { then: noop, catch: noop, abort: noop };
   }
-  return await Promise.reject(err)
+  return Promise.reject(err);
 }
 
-function normalizeArguments (params, options, callback) {
+function normalizeArguments(params, options, callback) {
   if (typeof options === 'function') {
-    callback = options
-    options = {}
+    callback = options;
+    options = {};
   }
   if (typeof params === 'function' || params == null) {
-    callback = params
-    params = {}
-    options = {}
+    callback = params;
+    params = {};
+    options = {};
   }
-  return [params, options, callback]
+  return [params, options, callback];
 }
 
 function apiFunc (cache, path) {
   return function (...args) {
-    if (!cache[path]) cache[path] = require(path)
-    return cache[path](...args)
+    if (!cache[path]) cache[path] = require(path);
+    return cache[path](...args);
   }
 }
 
@@ -65,6 +65,6 @@ module.exports = {
   handleError,
   normalizeArguments,
   noop,
-  kConfigErr,
+  kConfigurationError,
   apiFunc
-}
+};
