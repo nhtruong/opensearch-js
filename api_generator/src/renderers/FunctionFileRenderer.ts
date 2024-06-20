@@ -38,6 +38,7 @@ export default class FunctionFileRenderer extends BaseRenderer {
       parameter_descriptions: this.#parameter_descriptions(),
       function_name: this.group.function_name,
       path_components: this.#path_components(),
+      path: this.#path(),
       http_verb: this.#http_verb(),
       return_type: '{{abort: function(), then: function(), catch: function()}|Promise<never>|*}',
       required_params: Array.from(this.required_params),
@@ -63,12 +64,18 @@ export default class FunctionFileRenderer extends BaseRenderer {
     })
   }
 
-  #path_components (): string {
+  #path (): string {
+    const path_params = _.values(this.group.path_params)
+    if (path_params.length === 0) return `'${this.group.url}'`
+    if (path_params.every((p) => p.required)) return `'/' + ${this.#path_components().join(" + '/' + ")}`
+    return `'/' + [${this.#path_components().join(', ')}].filter((c) => c != null).join('/')`
+  }
+
+  #path_components (): string[] {
     return this.group.url
       .split('/')
       .filter((c) => c !== '')
       .map((c) => c.startsWith('{') ? c.slice(1, -1) : `'${c}'`)
-      .join(', ')
   }
 
   #http_verb (): string {

@@ -34,7 +34,7 @@ function {{function_name}}(params, options, callback) {
   {{.}} = encodeURIComponent({{.}});
   {{/path_params}}
 
-  let path = [{{{path_components}}}].filter((c) => c != null).join('/');
+  let path = {{{path}}};
   const method = {{{http_verb}}};
   body = body || '';
 
