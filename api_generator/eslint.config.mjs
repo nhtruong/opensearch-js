@@ -13,7 +13,7 @@ export default [
   pluginJs.configs.recommended,
   ...compat.extends('standard-with-typescript'),
   {
-    files: ['**/*.{js,ts}'],
+    files: ['**/*.{ts}'],
     plugins: {
       'license-header': licenseHeader
     },
