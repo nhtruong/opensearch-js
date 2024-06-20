@@ -59,7 +59,7 @@ export default class OperationGroup {
       for (const param of params) path_params[param.name] = param
       return params.map((p) => p.name)
     }).reduce((a, b) => _.intersection(b, a)))
-    for (const name of universal_path_params) path_params[name].required = true
+    for (const name in path_params) path_params[name].required = universal_path_params.has(name)
     return path_params
   }
 }
