@@ -29,7 +29,9 @@
 'use strict'
 
 const result = { body: null, statusCode: null, headers: null, warnings: null };
-const kConfigurationError = Symbol('configuration error');
+const kConfigErr = Symbol('configuration error');
+
+function noop () {}
 
 function handleError(err, callback) {
   if (callback) {
@@ -39,8 +41,8 @@ function handleError(err, callback) {
   return Promise.reject(err);
 }
 
-function handleMissingParam(name, Klass, callback) {
-  const err = new Klass(`Missing required parameter "${name}"`);
+function handleMissingParam(param, apiModule, callback) {
+  const err = new apiModule[kConfigErr]('Missing required parameter: ' + name);
   return handleError(err, callback);
 }
 
@@ -64,13 +66,11 @@ function apiFunc (cache, path) {
   }
 }
 
-function noop () {}
-
 module.exports = {
   handleError,
   handleMissingParam,
   normalizeArguments,
   noop,
-  kConfigurationError,
+  kConfigErr,
   apiFunc,
 };
