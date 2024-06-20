@@ -34,7 +34,7 @@ const kConfigErr = Symbol('configuration error');
 function noop () {}
 
 function parsePathParam(param) {
-  if (param == null) return '';
+  if (param == null) return null;
   return encodeURIComponent(param);
 }
 

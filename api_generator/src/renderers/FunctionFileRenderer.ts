@@ -30,6 +30,8 @@ export default class FunctionFileRenderer extends BaseRenderer {
 
   view (): Record<string, any> {
     return {
+      with_path_params: _.keys(this.group.path_params).length > 0,
+      required: this.required_params.size > 0,
       method_description: this.group.description,
       reference: `{@link ${this.group.api_reference} - ${this.group.full_name}}`,
       doc_namespace: this.namespace.doc_namespace,
@@ -69,7 +71,7 @@ export default class FunctionFileRenderer extends BaseRenderer {
     const path_params = _.values(this.group.path_params)
     if (path_params.length === 0) return `'${this.group.url}'`
     if (path_params.every((p) => p.required)) return `${this.#path_components().join(' + ')}`
-    return `[${this.#path_components().join(', ')}].filter((c) => c !== '').join('').replace('//', '/')`
+    return `[${this.#path_components().join(', ')}].filter((c) => c != null).join('').replace('//', '/')`
   }
 
   #path_components (): string[] {

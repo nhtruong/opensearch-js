@@ -3,7 +3,7 @@
 
 'use strict'
 
-const { normalizeArguments, handleMissingParam, parsePathParam } = require('../utils');
+const { normalizeArguments{{#with_path_params}}, parsePathParam{{/with_path_params}}{{#required}}, handleMissingParam{{/required}} } = require('../utils');
 
 /**
  * {{{method_description}}}
