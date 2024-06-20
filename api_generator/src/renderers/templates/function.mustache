@@ -3,7 +3,7 @@
 
 'use strict'
 
-const { normalizeArguments, handleError, kConfigurationError } = require('../utils');
+const { normalizeArguments, handleError, kConfigErr } = require('../utils');
 
 /**
  * {{{method_description}}}
@@ -28,7 +28,7 @@ function {{function_name}}(params, options, callback) {
 
   {{#required_params}}
   if (params.{{.}} == null) {
-    const err = new this[kConfigurationError]('Missing required parameter: {{.}}');
+    const err = new this[kConfigErr]('Missing required parameter: {{.}}');
     return handleError(err, callback);
   }
 

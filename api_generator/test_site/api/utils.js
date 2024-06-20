@@ -29,7 +29,7 @@
 'use strict'
 
 const result = { body: null, statusCode: null, headers: null, warnings: null }
-const kConfigurationError = Symbol('configuration error')
+const kConfigErr = Symbol('configuration error')
 
 async function handleError (err, callback) {
   if (callback) {
@@ -65,6 +65,6 @@ module.exports = {
   handleError,
   normalizeArguments,
   noop,
-  kConfigurationError,
+  kConfigErr,
   apiFunc
 }
