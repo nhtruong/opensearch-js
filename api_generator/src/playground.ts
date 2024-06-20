@@ -9,6 +9,6 @@
 
 import Generator from './Generator'
 
-const generator = new Generator('opensearch-openapi.yaml', './test_site')
+const generator = new Generator('opensearch-openapi.yaml', '/Users/theotr/IdeaProjects/opensearch-js-base')
 
 generator.generate()

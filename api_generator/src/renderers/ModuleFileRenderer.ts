@@ -35,7 +35,7 @@ export default class ModuleFileRenderer extends BaseRenderer {
       .map((group: OperationGroup) => {
         return {
           prototype_name: group.prototype_name,
-          file_name: group.file_name
+          path: `./${this.namespace.folder_name}/${group.file_name}`
         }
       })
   }

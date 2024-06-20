@@ -8,6 +8,9 @@ const { kConfigErr, apiFunc } = require('./utils')
 const kApiModules = Symbol('api modules')
 const kApiLoader = Symbol('api loader')
 
+
+/** @namespace {{doc_namespace}} */
+
 function OpenSearchAPI (opts) {
   this[kConfigErr] = opts.ConfigurationError
   this[kApiModules] = {}
@@ -18,14 +21,13 @@ function OpenSearchAPI (opts) {
     }
     return this[kApiModules][path]
   }
-}
 
-// Setup Root API Functions
-/** @namespace {{doc_namespace}} */
-const cache = {}
-{{#root_functions}}
-OpenSearchAPI.prototype.{{prototype_name}} = apiFunc(cache, '{{{path}}}')
-{{/root_functions}}
+  // Setup Root API Functions
+  const cache = {}
+  {{#root_functions}}
+    this.{{prototype_name}} = apiFunc(cache, '{{{path}}}', this)
+  {{/root_functions}}
+}
 
 // Setup API Modules
 Object.defineProperties(OpenSearchAPI.prototype, {
