@@ -33,17 +33,18 @@ const kConfigErr = Symbol('configuration error');
 
 function noop () {}
 
-function handleError(err, callback) {
+function parsePathParam(param) {
+  if (param == null) return '';
+  return encodeURIComponent(param);
+}
+
+function handleMissingParam(param, apiModule, callback) {
+  const err = new apiModule[kConfigErr]('Missing required parameter: ' + name);
   if (callback) {
     process.nextTick(callback, err, result);
     return { then: noop, catch: noop, abort: noop };
   }
   return Promise.reject(err);
-}
-
-function handleMissingParam(param, apiModule, callback) {
-  const err = new apiModule[kConfigErr]('Missing required parameter: ' + name);
-  return handleError(err, callback);
 }
 
 function normalizeArguments(params, options, callback) {
@@ -67,8 +68,8 @@ function apiFunc (cache, path) {
 }
 
 module.exports = {
-  handleError,
   handleMissingParam,
+  parsePathParam,
   normalizeArguments,
   noop,
   kConfigErr,

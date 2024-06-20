@@ -40,6 +40,7 @@ export default class FunctionFileRenderer extends BaseRenderer {
       path_components: this.#path_components(),
       path: this.#path(),
       http_verb: this.#http_verb(),
+      body_required: this.group.request_body?.required,
       return_type: '{{abort: function(), then: function(), catch: function()}|Promise<never>|*}',
       required_params: Array.from(this.required_params),
       path_params: _.keys(this.group.path_params),
@@ -67,15 +68,16 @@ export default class FunctionFileRenderer extends BaseRenderer {
   #path (): string {
     const path_params = _.values(this.group.path_params)
     if (path_params.length === 0) return `'${this.group.url}'`
-    if (path_params.every((p) => p.required)) return `'/' + ${this.#path_components().join(" + '/' + ")}`
-    return `'/' + [${this.#path_components().join(', ')}].filter((c) => c != null).join('/')`
+    if (path_params.every((p) => p.required)) return `${this.#path_components().join(' + ')}`
+    return `[${this.#path_components().join(', ')}].filter((c) => c !== '').join('').replace('//', '/')`
   }
 
   #path_components (): string[] {
     return this.group.url
-      .split('/')
-      .filter((c) => c !== '')
-      .map((c) => c.startsWith('{') ? c.slice(1, -1) : `'${c}'`)
+      .split('{')
+      .flatMap(x => x.split('}'))
+      .map(x => x.includes('/') ? `'${x}'` : x)
+      .filter(x => x !== '')
   }
 
   #http_verb (): string {
@@ -83,6 +85,7 @@ export default class FunctionFileRenderer extends BaseRenderer {
     if (_.isEqual(verbs, ['GET', 'POST'])) return "body ? 'POST' : 'GET'"
     if (_.isEqual(verbs, ['POST', 'PUT'])) {
       const optional = (_.values(this.group.path_params)).find((p) => p.required)?.name
+      if (optional == null) return "'POST'"
       return `${optional} === undefined ? 'POST' : 'PUT'`
     }
     return `'${verbs[0]}'`
