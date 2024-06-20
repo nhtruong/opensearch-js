@@ -39,6 +39,11 @@ function handleError(err, callback) {
   return Promise.reject(err);
 }
 
+function handleMissingParam(name, Klass, callback) {
+  const err = new Klass(`Missing required parameter "${name}"`);
+  return handleError(err, callback);
+}
+
 function normalizeArguments(params, options, callback) {
   if (typeof options === 'function') {
     callback = options;
@@ -63,8 +68,9 @@ function noop () {}
 
 module.exports = {
   handleError,
+  handleMissingParam,
   normalizeArguments,
   noop,
   kConfigurationError,
-  apiFunc
+  apiFunc,
 };
