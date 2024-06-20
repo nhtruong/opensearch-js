@@ -23,7 +23,7 @@ export default class Generator {
   readonly output_folder: string
 
   constructor (spec_path: string, output_folder: string) {
-    this.output_folder = path.resolve(output_folder, 'api')
+    this.output_folder = path.join(output_folder, 'api')
     const raw_spec: RawOpenSearchSpec = YAML.parse(fs.readFileSync(spec_path, 'utf8'))
     const operations = (new OperationParser(raw_spec)).operations
     this.namespaces =
