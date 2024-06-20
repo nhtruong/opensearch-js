@@ -86,9 +86,9 @@ export default class FunctionFileRenderer extends BaseRenderer {
     const verbs = Array.from(this.group.http_verbs).sort()
     if (_.isEqual(verbs, ['GET', 'POST'])) return "body ? 'POST' : 'GET'"
     if (_.isEqual(verbs, ['POST', 'PUT'])) {
-      const optional = (_.values(this.group.path_params)).find((p) => p.required)?.name
+      const optional = (_.values(this.group.path_params)).find((p) => !p.required)?.name
       if (optional == null) return "'POST'"
-      return `${optional} === undefined ? 'POST' : 'PUT'`
+      return `${optional} == null ? 'POST' : 'PUT'`
     }
     return `'${verbs[0]}'`
   }

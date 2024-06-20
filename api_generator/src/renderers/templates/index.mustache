@@ -25,7 +25,7 @@ function OpenSearchAPI (opts) {
   // Setup Root API Functions
   const cache = {}
   {{#root_functions}}
-    this.{{prototype_name}} = apiFunc(cache, '{{{path}}}', this)
+  this.{{prototype_name}} = apiFunc(this, cache, '{{{path}}}')
   {{/root_functions}}
 }
 

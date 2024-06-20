@@ -60,9 +60,9 @@ function normalizeArguments(params, options, callback) {
   return [params, options, callback];
 }
 
-function apiFunc (cache, path) {
+function apiFunc (bindObj, cache, path) {
   return function (...args) {
-    if (!cache[path]) cache[path] = require(path);
+    if (!cache[path]) cache[path] = require(path).bind(bindObj);
     return cache[path](...args);
   }
 }

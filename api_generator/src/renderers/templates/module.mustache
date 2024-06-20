@@ -10,9 +10,10 @@ const { apiFunc, kConfigErr } = require('../utils');
 function {{module_name}}(transport, ConfigurationError) {
   this.transport = transport;
   this[kConfigErr] = ConfigurationError;
+
   const cache = {};
   {{#functions}}
-  this.{{prototype_name}} = apiFunc(cache, '{{{path}}}', this);
+  this.{{prototype_name}} = apiFunc(this, cache, '{{{path}}}');
   {{/functions}}
 }
 
