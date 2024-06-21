@@ -3,17 +3,14 @@
 
 'use strict';
 
-const { apiFunc, kConfigErr } = require('../utils');
+const { apiFunc } = require('../utils');
 
 /** @namespace {{doc_namespace}} */
 
-function {{module_name}}(transport, ConfigurationError) {
-  this.transport = transport;
-  this[kConfigErr] = ConfigurationError;
-
+function {{module_name}}(bindObj) {
   const cache = {};
   {{#functions}}
-  this.{{prototype_name}} = apiFunc(this, cache, '{{{path}}}');
+  this.{{prototype_name}} = apiFunc(bindObj, cache, '{{{path}}}');
   {{/functions}}
 }
 

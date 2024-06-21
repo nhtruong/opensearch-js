@@ -4,12 +4,8 @@
 'use strict'
 
 const { kConfigErr, apiFunc } = require('./utils')
-
 const kApiModules = Symbol('api modules')
 const kApiLoader = Symbol('api loader')
-
-
-/** @namespace {{doc_namespace}} */
 
 function OpenSearchAPI (opts) {
   this[kConfigErr] = opts.ConfigurationError
@@ -17,12 +13,13 @@ function OpenSearchAPI (opts) {
   this[kApiLoader] = function (path) {
     if (this[kApiModules][path] === undefined) {
       const ApiModule = require(path)
-      this[kApiModules][path] = new ApiModule(this.transport, this[kConfigErr])
+      this[kApiModules][path] = new ApiModule(this)
     }
     return this[kApiModules][path]
   }
 
   // Setup Root API Functions
+  /** @namespace {{doc_namespace}} */
   const cache = {}
   {{#root_functions}}
   this.{{prototype_name}} = apiFunc(this, cache, '{{{path}}}')
