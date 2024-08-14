@@ -32,7 +32,6 @@
 import Transport, {
   ApiError,
   ApiResponse,
-  RequestEvent,
 } from './lib/Transport';
 import Connection from './lib/Connection';
 import {
@@ -67,7 +66,6 @@ export {
   errors,
   ApiError,
   ApiResponse,
-  RequestEvent,
   ResurrectEvent,
   ClientOptions,
   NodeOptions,
